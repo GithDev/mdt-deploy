@@ -37,8 +37,8 @@
               type="room"
               :selected="obj.Room"
               :toAssign="toAssign"
-              :assigned="RoleAssigned"
-              :deployed="RoleDeployed"
+              @assigned="RoleAssigned($event)"
+              @deployed="RoleDeployed($event)"
             ></assignBtn>
           </td>
           <td>

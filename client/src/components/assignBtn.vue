@@ -8,13 +8,11 @@ export default {
   props: {
     toAssign: null,
     selected: null,
-    type: null,
-    assigned: Function,
-    deployed: Function
+    type: null
   },
 
   data() {
-    return {      
+    return {
       isLoading: false
     };
   },
@@ -39,7 +37,7 @@ export default {
           room: this.$route.params.room
         });
 
-        this.assigned();
+        this.$emit("assigned");
 
         let result = await this.$root.HttpPost("deploy/" + this.type, {
           target: this.selected,
@@ -47,8 +45,8 @@ export default {
           city: this.$route.params.city,
           room: this.$route.params.room
         });
-        
-        this.deployed(result);
+
+        this.$emit("deployed", result);
 
         this.isLoading = false;
       } else {
