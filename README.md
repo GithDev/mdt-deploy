@@ -1,3 +1,3 @@
 # mdt-deploy
 
-Scheduled MDT deployments via a website.
+Schedule MDT deployments via a website.
