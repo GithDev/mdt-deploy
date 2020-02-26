@@ -7,7 +7,7 @@
       :min-date="minDate"
       format="YYYY-MM-DDTHH:mm:ssZ"
     />
-    <br>
+    <br />
     <button
       class="button is-primary is-pulled-right"
       :class="{'is-loading':isLoading}"
@@ -33,8 +33,7 @@ export default {
     toAssign: null,
     selected: null,
     type: null,
-    start: null,
-    done: Function
+    start: null
   },
 
   data() {
@@ -52,7 +51,6 @@ export default {
   },
   methods: {
     async click() {
-      console.log(this.date);
       if (this.toAssign) {
         this.isLoading = true;
         let result = await this.$root.HttpPost("schedule/set/" + this.type, {
@@ -63,7 +61,7 @@ export default {
           start: this.date
         });
 
-        this.done(result);
+        this.$emit("done", result);
 
         this.isLoading = false;
       } else {

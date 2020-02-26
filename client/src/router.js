@@ -1,8 +1,8 @@
 import Vue from "vue";
 import Router from "vue-router";
-import computers from "./components/computers.vue"
-import rooms from "./components/rooms.vue"
-import cities from "./components/cities.vue"
+import computers from "./views/computers.vue";
+import rooms from "./views/rooms.vue";
+import cities from "./views/cities.vue";
 
 Vue.use(Router);
 
@@ -16,29 +16,19 @@ export default new Router({
       component: cities
     },
     {
-      path:"/cities",
+      path: "/cities",
       name: "cities",
       component: cities
     },
     {
-      path:"/cities/:city/rooms/",
+      path: "/cities/:city/rooms/",
       name: "rooms",
       component: rooms
     },
     {
-      path:"/cities/:city/rooms/:room/computers",
+      path: "/cities/:city/rooms/:room/computers",
       name: "computers",
       component: computers
-    },
-    
-    // {
-    //   path: "/about",
-    //   name: "about",
-    //   // route level code-splitting
-    //   // this generates a separate chunk (about.[hash].js) for this route
-    //   // which is lazy-loaded when the route is visited.
-    //   component: () =>
-    //     import(/* webpackChunkName: "about" */ "./views/About.vue")
-    // }
+    }
   ]
 });

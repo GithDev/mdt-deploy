@@ -31,9 +31,7 @@
 <script>
 export default {
   components: {},
-  props: {
-    changed: Function
-  },
+  props: {},
 
   data() {
     return {
@@ -54,7 +52,7 @@ export default {
     },
     ChangeSelected(obj) {
       this.selectedItem = obj;
-      this.changed(obj);
+      this.$emit("changed", obj);
     }
   },
 
