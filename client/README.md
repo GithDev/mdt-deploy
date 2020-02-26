@@ -1,5 +1,3 @@
-Not according to standards. Made in a hurry.
-
 # deploy
 
 ## Project setup
