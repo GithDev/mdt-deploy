@@ -2,4 +2,6 @@
 
 Schedule MDT deployments via a website.
 
-I created this tool in a hurry to make an assignment as a consultant easier. Schedules are only stored in application memory (RAM).
+I was working as a consultant at a training center and was responsible for computer deployments. The problem was that the class often ended late and a new class in the same room had to be prepared the next morning, so, i made this tool to schedule installations late at night, on weekends and so on.
+
+Some comments has been added after the assignment just for you to understand some of what is happening in the code. I didn´t have time to make it look good.

@@ -20,7 +20,7 @@
             v-for="(obj, index) in data"
             :key="index"
             class="dropdown-item"
-            @click="ChangeSelected(obj)"
+            @click="changeSelected(obj)"
           >{{obj.Role}}</a>
         </div>
       </div>
@@ -29,6 +29,7 @@
 </template>
 
 <script>
+// This is a dropdown list component with MDT roles.
 export default {
   components: {},
   props: {},
@@ -50,7 +51,7 @@ export default {
     open(e) {
       this.showList = !this.showList;
     },
-    ChangeSelected(obj) {
+    changeSelected(obj) {
       this.selectedItem = obj;
       this.$emit("changed", obj);
     }

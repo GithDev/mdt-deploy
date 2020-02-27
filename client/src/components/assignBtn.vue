@@ -3,6 +3,7 @@
 </template>
 
 <script>
+// This is an assignment button component. This assign a role a room, city or computer.
 export default {
   components: {},
   props: {
@@ -29,7 +30,7 @@ export default {
     async assign() {
       if (this.toAssign) {
         this.isLoading = true;
-
+        // Tell the server to assign a role. "Type" is the endpoint route (room, city or computer).
         await this.$root.HttpPost("assign/" + this.type, {
           target: this.selected,
           role: this.toAssign.Role,
@@ -37,8 +38,10 @@ export default {
           room: this.$route.params.room
         });
 
+        // Tell the parent component that the it has been assigned.
         this.$emit("assigned");
 
+        // Tell the server to start deployment.
         let result = await this.$root.HttpPost("deploy/" + this.type, {
           target: this.selected,
           role: this.toAssign.Role,
@@ -46,6 +49,7 @@ export default {
           room: this.$route.params.room
         });
 
+        // Tell the parent component it has been deployed, and bring the result.
         this.$emit("deployed", result);
 
         this.isLoading = false;

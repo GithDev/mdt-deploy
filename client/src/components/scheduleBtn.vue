@@ -16,14 +16,11 @@
   </div>
 </template>
 
-<style>
-/* .datetimepicker {
-  right: 100% !important;
-} */
-</style>
 
 
 <script>
+// This DataTime picker for an MDT deployment schedule. It sends the schedule to the server.
+
 import VueCtkDateTimePicker from "vue-ctk-date-time-picker";
 import "vue-ctk-date-time-picker/dist/vue-ctk-date-time-picker.css";
 
@@ -45,6 +42,7 @@ export default {
   },
 
   created() {
+    // Set some initial values.
     let date = new Date();
     date = new Date(date.setDate(date.getDate() - 1));
     this.minDate = date.toISOString().substring(0, 10);
@@ -53,6 +51,7 @@ export default {
     async click() {
       if (this.toAssign) {
         this.isLoading = true;
+        // Send the schedule to the server.
         let result = await this.$root.HttpPost("schedule/set/" + this.type, {
           target: this.selected,
           role: this.toAssign.Role,
@@ -61,6 +60,7 @@ export default {
           start: this.date
         });
 
+        // Emit the result to the parent component.
         this.$emit("done", result);
 
         this.isLoading = false;

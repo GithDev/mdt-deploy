@@ -4,7 +4,7 @@
       <ul>
         <li class="is-active">
           <a>Cities</a>
-        </li>        
+        </li>
       </ul>
     </nav>
 

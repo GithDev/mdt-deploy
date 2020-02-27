@@ -156,11 +156,16 @@ export default {
     };
   },
   async created() {
+    // Get computers and wait for the result that functions below depend on.
     await this.GetComputers();
+    // Get progress data and add it to the computers fetched above.
     this.GetProgress();
+    // Get reboot data and add it to the computers fetched above.
     this.GetRebootProgress();
+    // Get schedule data and add it to the computers fetched above.
     this.GetSchedules();
 
+    // Update progress data and reboot data every 5 sec.
     setInterval(async () => {
       this.GetProgress();
       this.GetRebootProgress();
