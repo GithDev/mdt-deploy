@@ -29,7 +29,7 @@ const rebootInfo = [];
 // Variable for storing schedules. This could be saved to a file to make the storage persistant.
 const schedules = [];
 
-// This loop triggers actions for set schedules.
+// A loop that runs every 5 sec. This loop handle schedules.
 setInterval(async () => {
   // Filter out relevant schedules (ones that should be triggered).
   const filteredSchedules = schedules.filter(
