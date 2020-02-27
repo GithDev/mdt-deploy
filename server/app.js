@@ -57,7 +57,7 @@ setInterval(async () => {
         schedule.roleName
       );
 
-      // Initiating a remote reboot based on the computer name.
+      // Initiating a remote reboot based on the computer name. We do not wait for the function to complete, because it is a long running task.
       rebootComputer(schedule.computer);
     } catch (err) {
       console.error(err);
