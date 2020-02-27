@@ -16,7 +16,7 @@
       </ul>
     </nav>
 
-    <roles @changed="RoleChanged($event)"></roles>
+    <roles @changed="roleChanged($event)"></roles>
     <table class="table is-narrow">
       <thead>
         <tr>
@@ -37,14 +37,14 @@
               type="room"
               :selected="obj.Room"
               :toAssign="toAssign"
-              @assigned="RoleAssigned($event)"
-              @deployed="RoleDeployed($event)"
+              @assigned="roleAssigned($event)"
+              @deployed="roleDeployed($event)"
             ></assignBtn>
           </td>
           <td>
             <button
               class="button is-small"
-              @click="ShowModal(obj)"
+              @click="showModal(obj)"
               :class="{'is-info': obj.schedule && new Date(obj.schedule.start) >  new Date()}"
             >Schedule</button>
           </td>
@@ -52,19 +52,19 @@
       </tbody>
     </table>
 
-    <div class="modal" :class="{'is-active': showModal}" v-if="modal">
+    <div class="modal" :class="{'is-active': modalVisible}" v-if="modal">
       <div class="modal-background"></div>
       <div class="modal-content">
         <div class="content">
           <button
             class="button is-pulled-right is-danger"
             style="margin-bottom:20px"
-            @click="DeleteSchedule(modal)"
+            @click="deleteSchedule(modal)"
           >Delete all</button>
         </div>
-        <scheduleBtn type="room" :selected="modal.Room" :toAssign="toAssign" :done="SchedulesDone"></scheduleBtn>
+        <scheduleBtn type="room" :selected="modal.Room" :toAssign="toAssign" :done="schedulesDone"></scheduleBtn>
       </div>
-      <button class="modal-close is-large" aria-label="close" @click="showModal=false"></button>
+      <button class="modal-close is-large" aria-label="close" @click="modalVisible=false"></button>
     </div>
   </div>
 </template>
@@ -81,7 +81,7 @@ export default {
       toAssign: null,
       selected: null,
       modal: null,
-      showModal: false
+      modalVisible: false
     };
   },
 
@@ -93,7 +93,7 @@ export default {
     this.data = result;
   },
   methods: {
-    async DeleteSchedule(obj) {
+    async deleteSchedule(obj) {
       let result = await this.$root.HttpPost("schedule/delete/room", {
         target: obj.Room,
         city: this.$route.params.city
@@ -101,21 +101,21 @@ export default {
 
       this.$root.ShowNotification("Schedules are deleted!", "is-success");
     },
-    ShowModal(obj) {
-      this.showModal = true;
+    showModal(obj) {
+      this.modalVisible = true;
       this.modal = obj;
     },
-    SchedulesDone() {
-      this.showModal = false;
+    schedulesDone() {
+      this.modalVisible = false;
       this.$root.ShowNotification("Schedules are set!", "is-success");
     },
-    RoleChanged(obj) {
+    roleChanged(obj) {
       this.toAssign = obj;
     },
-    RoleAssigned() {
+    roleAssigned() {
       this.$root.ShowNotification("Assigning role - done", "is-success");
     },
-    RoleDeployed() {
+    roleDeployed() {
       this.$root.ShowNotification("Reboot computers - done", "is-success");
     }
   }

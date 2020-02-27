@@ -19,7 +19,7 @@
       </ul>
     </nav>
 
-    <roles @changed="RoleChanged($event)"></roles>
+    <roles @changed="roleChanged($event)"></roles>
     <table class="table is-fullwidth is-narrow">
       <thead>
         <tr>
@@ -43,19 +43,19 @@
           <td>
             <div class="tooltip" :data-tooltip="obj.MacAddress">{{obj.Description}}</div>
           </td>
-          <td :class="{'has-text-grey-light':IsIniting(obj)}">{{obj.Role}}</td>
+          <td :class="{'has-text-grey-light':isIniting(obj)}">{{obj.Role}}</td>
           <td
-            :class="{'has-text-link' : obj.CurrentStep != obj.TotalSteps, 'has-text-grey-light':IsIniting(obj) }"
+            :class="{'has-text-link' : obj.CurrentStep != obj.TotalSteps, 'has-text-grey-light':isIniting(obj) }"
           >{{obj.CurrentStep}}</td>
-          <td :class="{'has-text-grey-light':IsIniting(obj)}">{{obj.TotalSteps}}</td>
-          <td :class="{'has-text-grey-light':IsIniting(obj)}">
+          <td :class="{'has-text-grey-light':isIniting(obj)}">{{obj.TotalSteps}}</td>
+          <td :class="{'has-text-grey-light':isIniting(obj)}">
             <span class="has-text-link" v-if="obj.PercentComplete != 100">{{obj.PercentComplete}}</span>
             <span class="has-text-success" v-else>
               <i class="material-icons" aria-hidden="true">check</i>
             </span>
           </td>
           <td
-            :class="{'has-text-danger' : obj.Errors != 0, 'has-text-grey-light':IsIniting(obj)}"
+            :class="{'has-text-danger' : obj.Errors != 0, 'has-text-grey-light':isIniting(obj)}"
           >{{obj.Errors}}</td>
           <td>
             <span
@@ -73,18 +73,18 @@
             <span class="loader" v-if="obj.deployResult && obj.deployResult.running"></span>
           </td>
           <td
-            :class="{'has-text-grey-light':IsIniting(obj)}"
+            :class="{'has-text-grey-light':isIniting(obj)}"
           >{{obj.deployResult && obj.deployResult.started ? $root.GetDateStr(obj.deployResult.started) : ""}}</td>
           <td
-            :class="{'has-text-grey-light':IsIniting(obj)}"
+            :class="{'has-text-grey-light':isIniting(obj)}"
           >{{ $root.GetAspDateStr(obj.StartTime)}}</td>
-          <td :class="{'has-text-grey-light':IsIniting(obj)}">
+          <td :class="{'has-text-grey-light':isIniting(obj)}">
             <span
               v-if="obj.StartTime && obj.LastTime"
             >{{ $root.GetTimeBetweenDates($root.GetAspDate(obj.StartTime), $root.GetAspDate(obj.LastTime))}} min</span>
           </td>
           <td>
-            <span v-if="IsIniting(obj)">
+            <span v-if="isIniting(obj)">
               <span class="loader"></span>
             </span>
           </td>
@@ -94,14 +94,14 @@
               type="computer"
               :selected="obj.Description"
               :toAssign="toAssign"
-              @assigned="RoleAssigned($event)"
-              @deployed="RoleDeployed($event)"
+              @assigned="roleAssigned($event)"
+              @deployed="roleDeployed($event)"
             ></assignBtn>
           </td>
           <td>
             <button
               class="button is-small"
-              @click="ShowModal(obj)"
+              @click="showModal(obj)"
               :class="{'is-info': obj.schedule && new Date(obj.schedule.start) >  new Date()}"
             >Schedule</button>
           </td>
@@ -109,7 +109,7 @@
       </tbody>
     </table>
 
-    <div class="modal" :class="{'is-active': showModal}" v-if="modal">
+    <div class="modal" :class="{'is-active': modalVisible}" v-if="modal">
       <div class="modal-background"></div>
       <div class="modal-content">
         <div
@@ -122,17 +122,17 @@
           <b>{{modal.schedule.roleName}}</b>
           <button
             class="button is-pulled-right is-danger"
-            @click="DeleteSchedule(modal.schedule)"
+            @click="deleteSchedule(modal.schedule)"
           >Delete</button>
         </div>
         <scheduleBtn
           type="computer"
           :selected="modal.Description"
           :toAssign="toAssign"
-          @done="SetScheduleDone($event)"
+          @done="setScheduleDone($event)"
         ></scheduleBtn>
       </div>
-      <button class="modal-close is-large" aria-label="close" @click="showModal=false"></button>
+      <button class="modal-close is-large" aria-label="close" @click="modalVisible=false"></button>
     </div>
   </div>
 </template>
@@ -152,33 +152,33 @@ export default {
       toAssign: null,
       selected: null,
       modal: null,
-      showModal: false
+      modalVisible: false
     };
   },
   async created() {
     // Get computers and wait for the result that functions below depend on.
-    await this.GetComputers();
+    await this.getComputers();
     // Get progress data and add it to the computers fetched above.
-    this.GetProgress();
+    this.getProgress();
     // Get reboot data and add it to the computers fetched above.
-    this.GetRebootProgress();
+    this.getRebootProgress();
     // Get schedule data and add it to the computers fetched above.
-    this.GetSchedules();
+    this.getSchedules();
 
     // Update progress data and reboot data every 5 sec.
     setInterval(async () => {
-      this.GetProgress();
-      this.GetRebootProgress();
-      //this.GetSchedules();
+      this.getProgress();
+      this.getRebootProgress();
+      //this.getSchedules();
     }, 5000);
   },
   methods: {
-    async SetScheduleDone(schedules) {
-      this.showModal = false;
+    async setScheduleDone(schedules) {
+      this.modalVisible = false;
       this.$root.ShowNotification("Saved!", "is-success");
-      this.GetSchedules(schedules);
+      this.getSchedules(schedules);
     },
-    async DeleteSchedule(schedule) {
+    async deleteSchedule(schedule) {
       let result = await this.$root.HttpPost("schedule/delete/computer", {
         target: schedule.computer
       });
@@ -186,7 +186,7 @@ export default {
       let computer = this.data.find(x => x.Description === schedule.computer);
       this.$set(computer, "schedule", null);
     },
-    async GetComputers() {
+    async getComputers() {
       let result = await this.$root.HttpGet(
         "cities/" +
           this.$route.params.city +
@@ -197,7 +197,7 @@ export default {
       this.data = result;
     },
 
-    async GetProgress() {
+    async getProgress() {
       let result = await this.$root.HttpGet(
         "cities/" +
           this.$route.params.city +
@@ -218,7 +218,7 @@ export default {
         }
       }
     },
-    async GetRebootProgress() {
+    async getRebootProgress() {
       let result = await this.$root.HttpGet(
         "cities/" +
           this.$route.params.city +
@@ -246,7 +246,7 @@ export default {
         }
       }
     },
-    async GetSchedules(arr) {
+    async getSchedules(arr) {
       if (!arr) {
         arr = await this.$root.HttpGet(
           "cities/" +
@@ -262,15 +262,15 @@ export default {
         this.$set(computer, "schedule", schedule);
       }
     },
-    RoleChanged(obj) {
+    roleChanged(obj) {
       this.toAssign = obj;
     },
-    async RoleAssigned() {
-      await this.GetComputers();
-      await this.GetProgress();
-      await this.GetRebootProgress();
+    async roleAssigned() {
+      await this.getComputers();
+      await this.getProgress();
+      await this.getRebootProgress();
     },
-    RoleDeployed(result) {
+    roleDeployed(result) {
       for (let deployResult of result) {
         let computer = this.data.find(
           x => x.Description === deployResult.computer
@@ -282,7 +282,7 @@ export default {
         }
       }
     },
-    IsIniting(obj) {
+    isIniting(obj) {
       if (
         obj.deployResult &&
         obj.deployResult.started &&
@@ -297,8 +297,8 @@ export default {
 
       return false;
     },
-    ShowModal(computer) {
-      this.showModal = true;
+    showModal(computer) {
+      this.modalVisible = true;
       this.modal = computer;
     }
   }
