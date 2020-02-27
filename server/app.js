@@ -136,7 +136,7 @@ app.get(
   async (req, res) => {
     res.json(
       rebootInfo.filter(x =>
-        x.computer.startsWith(req.params.city + "-" + req.params.room)
+        x.computer.startsWith(`${req.params.city}-${req.params.room}`)
       )
     );
   }
@@ -387,9 +387,7 @@ async function assignComputer(
   classroomNumber,
   roleName
 ) {
-  await sqlQuery(
-    "DELETE FROM Settings WHERE ID=" + computerId + " AND Type='C'"
-  );
+  await sqlQuery(`DELETE FROM Settings WHERE ID=${computerId} AND Type='C'`);
   await sqlQuery(
     `INSERT INTO Settings (Type,ID,ComputerName,OSDComputerName,OrgName,FullName,JoinWorkgroup) VALUES ('C',${computerId},'${computerName} ','${computerName}','Windows User','Windows User','${classroomNumber}')`
   );
@@ -499,6 +497,4 @@ function GetSchedule(computerName) {
 }
 
 // Start express server on defined port.
-app.listen(serverPort, () =>
-  console.log("Listening on port " + serverPort + ".")
-);
+app.listen(serverPort, () => console.log(`Listening on port ${serverPort}.`));
