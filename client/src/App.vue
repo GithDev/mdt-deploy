@@ -2,7 +2,7 @@
   <div id="app">
     <section class="section">
       <div class="container">
-        <router-view/>
+        <router-view />
         <div class="notification-pop">
           <div id="alert" class="notification" style="display: none">
             <button class="delete"></button>
@@ -18,10 +18,6 @@
 [v-cloak] {
   display: none;
 }
-
-/* ::before {
-    font-family: "Material Icons";
-    content: "";  } */
 
 .loader {
   color: #ffffff;
@@ -44,7 +40,7 @@
   width: 400px !important;
   left: 50% !important;
   margin-left: -200px !important;
-  z-index: 9999!important;
+  z-index: 9999 !important;
 }
 </style>
 
